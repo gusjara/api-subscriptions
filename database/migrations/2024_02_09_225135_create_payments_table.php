@@ -13,6 +13,18 @@ return new class extends Migration
     {
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
+            // foreigns
+            $table->unsignedBigInteger('subscription_id');
+            $table->foreign('subscription_id')->references('id')->on('subscriptions');
+
+            $table->string('lote');
+            $table->string('status')->comment('generado | enviado_a_cobrar | pagado');
+            $table->date('period_start');
+            $table->date('period_end');
+            $table->date('generate_date');
+            $table->date('send_to_pay_date')->nullable();
+            $table->date('paid_date')->nullable();
+
             $table->timestamps();
         });
     }

@@ -13,6 +13,18 @@ return new class extends Migration
     {
         Schema::create('subscriptions', function (Blueprint $table) {
             $table->id();
+            // foreigns
+            $table->unsignedBigInteger('property_id');
+            $table->foreign('property_id')->references('id')->on('properties');
+
+            $table->unsignedBigInteger('plan_id');
+            $table->foreign('plan_id')->references('id')->on('plans');
+
+            $table->string('payment_type')->comment('debit | card');
+            $table->boolean('status');
+            $table->date('init_date');
+            $table->date('end_date');
+
             $table->timestamps();
         });
     }
