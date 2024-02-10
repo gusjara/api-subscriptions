@@ -16,6 +16,9 @@ return new class extends Migration
 
             $table->string('name');
             $table->string('type')->comment('neighborhood | building');
+            $table->string('address');
+            $table->string('postal_code');
+            $table->string('city');
             $table->string('contact_email');
 
             // foreigns
