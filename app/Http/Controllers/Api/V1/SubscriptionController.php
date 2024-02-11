@@ -15,9 +15,13 @@ class SubscriptionController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $subscriptions = Subscription::all();
+        /** active filter */
+        $status = true;
+        if ($request->status == 'false') $status = false;
+        $subscriptions = Subscription::where('status', $status)->get();
+
         return new SubscriptionCollection($subscriptions);
     }
 
@@ -52,29 +56,5 @@ class SubscriptionController extends Controller
         ]);
 
         return new SubscriptionResource($subscription);
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Subscription $subscription)
-    {
-        return new SubscriptionResource($subscription);
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
     }
 }

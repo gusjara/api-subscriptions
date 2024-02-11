@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\Http\Controllers\Controller;
-use App\Http\Resources\Payments\PaymentCollection;
 use App\Models\Payment;
+use App\Models\Subscription;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Number;
+use App\Http\Controllers\Controller;
+use App\Http\Resources\Payments\PaymentResource;
+use App\Http\Resources\Payments\PaymentCollection;
 
 class PaymentController extends Controller
 {
@@ -23,30 +27,91 @@ class PaymentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $subscriptions = Subscription::where('status', true)
+            ->where('end_date', '>=', now())
+            ->pluck('id');
+
+        $payment = Payment::create([
+            'lote' =>  md5(date('m-Y')),
+            'status' =>  Payment::GENERATE,
+            'period_sufix' => date('m-Y'),
+            'period_start' => Carbon::now(),
+            'period_end' => Carbon::now()->addMonth(1),
+            'generate_date' => Carbon::now(),
+        ]);
+
+        $payment->subscriptions()->attach($subscriptions);
+
+        $total_amount = 0;
+
+        foreach ($payment->subscriptions as $subscription) {
+            $total_amount = $total_amount + $subscription->plan->price;
+        }
+
+        $payment->total_amount = $total_amount;
+        $payment->save();
+
+        return new PaymentResource($payment);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Payment $payment)
     {
-        //
+        return new PaymentResource($payment);
     }
 
     /**
-     * Update the specified resource in storage.
+     * Display the specified resource by code lote.
      */
-    public function update(Request $request, string $id)
+    public function showByCode($code)
     {
-        //
+        $payment = Payment::where('lote', $code)->first();
+
+        if (!$payment) {
+            return response()->json([
+                'status' => false,
+                'message' => "Error. The requested resource does not exist"
+            ], 404);
+        }
+        return new PaymentResource($payment);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function amountsQuantityById(Payment $payment)
     {
-        //
+        $data = [
+            'id' => $payment->id,
+            'lote' => $payment->lote,
+            'total_amount' => Number::currency($payment->total_amount, 'ARS', 'arg'),
+            'total_subcriptions' => count($payment->subscriptions)
+        ];
+
+        return response()->json([
+            'data' => $data
+        ]);
+    }
+
+    public function amountsQuantityByCode($code)
+    {
+        $payment = Payment::where('lote', $code)->first();
+
+        if (!$payment) {
+            return response()->json([
+                'status' => false,
+                'message' => "Error. The requested resource does not exist"
+            ], 404);
+        }
+
+        $data = [
+            'id' => $payment->id,
+            'lote' => $payment->lote,
+            'total_amount' => Number::currency($payment->total_amount, 'ARS', 'arg'),
+            'total_subcriptions' => count($payment->subscriptions)
+        ];
+
+        return response()->json([
+            'data' => $data
+        ]);
     }
 }

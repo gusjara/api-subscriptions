@@ -2,9 +2,10 @@
 
 namespace App\Http\Resources\Payments;
 
-use App\Http\Resources\Subscriptions\SubscriptionCollection;
 use Illuminate\Http\Request;
+use Illuminate\Support\Number;
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\Subscriptions\SubscriptionCollection;
 
 class PaymentResource extends JsonResource
 {
@@ -18,6 +19,8 @@ class PaymentResource extends JsonResource
         return [
             'id' => $this->id,
             'lote' => $this->lote,
+            'total_subcriptions' => count($this->subscriptions),
+            'total_amount' => Number::currency($this->total_amount, 'ARS', 'arg'),
             'status' => $this->status,
             'periodo_sufix' => $this->period_sufix,
             'period_start' => $this->period_start->format('d-m-Y'),
