@@ -43,3 +43,8 @@ Route::post('/subscriptions', [SubscriptionController::class, 'store'])->name('s
 
 // pagos
 Route::get('/payments', [PaymentController::class, 'index'])->name('payments.index');
+Route::post('/payments', [PaymentController::class, 'store'])->name('payments.store');
+Route::get('/payments/{payment}', [PaymentController::class, 'show'])->name('payments.show.by.id');
+Route::get('/payments/code/{code}', [PaymentController::class, 'showByCode'])->name('payments.show.by.code');
+Route::get('/payments/{payment}/amounts', [PaymentController::class, 'amountsQuantityById'])->name('payments.amounts.quantity.id');
+Route::get('/payments/code/{code}/amounts', [PaymentController::class, 'amountsQuantityByCode'])->name('payments.amounts.quantity.code');
