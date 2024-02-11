@@ -14,11 +14,12 @@ return new class extends Migration
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
             // foreigns
-            $table->unsignedBigInteger('subscription_id');
-            $table->foreign('subscription_id')->references('id')->on('subscriptions');
+            // $table->unsignedBigInteger('subscription_id');
+            // $table->foreign('subscription_id')->references('id')->on('subscriptions');
 
             $table->string('lote');
             $table->string('status')->comment('generado | enviado_a_cobrar | pagado');
+            $table->string('period_sufix')->comment('sufijo para hacer busquedas ej: mm-yyyy');
             $table->date('period_start');
             $table->date('period_end');
             $table->date('generate_date');

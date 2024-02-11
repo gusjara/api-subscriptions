@@ -20,6 +20,9 @@ return new class extends Migration
             $table->unsignedBigInteger('plan_id');
             $table->foreign('plan_id')->references('id')->on('plans');
 
+            $table->unsignedBigInteger('client_id');
+            $table->foreign('client_id')->references('id')->on('clients');
+
             $table->string('payment_type')->comment('debit | card');
             $table->boolean('status');
             $table->date('init_date');

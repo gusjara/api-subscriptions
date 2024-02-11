@@ -27,4 +27,12 @@ class Payment extends Model
         'send_to_pay_date' => 'date',
         'paid_date' => 'date',
     ];
+
+    // ---- Relations ---- 
+
+    /** relation to subscription many to many*/
+    public function subscriptions()
+    {
+        return $this->belongsToMany(Subscription::class)->withTimestamps();
+    }
 }

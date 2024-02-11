@@ -25,7 +25,7 @@ class PropertiesTableSeeder extends Seeder
                 'postal_code' => $faker->postcode(),
                 'city' => $faker->city(),
                 'contact_email' => $faker->email(),
-                'client_id' => $i,
+                // 'client_id' => $i,
             ]);
         }
     }

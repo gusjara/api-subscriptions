@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\Http\Controllers\Controller;
+use App\Models\Plan;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Validator;
+use App\Http\Resources\Plans\PlanResource;
+use App\Http\Resources\Plans\PlanCollection;
 
 class PlanController extends Controller
 {
@@ -12,7 +16,8 @@ class PlanController extends Controller
      */
     public function index()
     {
-        //
+        $plans = Plan::all();
+        return new PlanCollection($plans);
     }
 
     /**
@@ -20,30 +25,32 @@ class PlanController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string',
+            'price' => 'required|numeric',
+        ], []);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'messahe' => 'The given data was invalid.',
+                'errors' => $validator->errors()
+            ], 400);
+        }
+
+        $plan = Plan::create([
+            'name' => $request->name,
+            'price' => $request->price,
+            'active' => true,
+        ]);
+
+        return new PlanResource($plan);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Plan $plan)
     {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        return new PlanResource($plan);
     }
 }

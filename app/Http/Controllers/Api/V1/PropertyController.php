@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Properties\PropertyCollection;
+use App\Http\Resources\Properties\PropertyResource;
+use App\Models\Property;
 use Illuminate\Http\Request;
 
 class PropertyController extends Controller
@@ -12,7 +15,8 @@ class PropertyController extends Controller
      */
     public function index()
     {
-        //
+        $properties = Property::all();
+        return new PropertyCollection($properties);
     }
 
     /**
@@ -26,9 +30,9 @@ class PropertyController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Property $property)
     {
-        //
+        return new PropertyResource($property);
     }
 
     /**
