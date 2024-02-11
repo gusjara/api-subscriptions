@@ -38,7 +38,7 @@ class Generate extends Command
                 ->pluck('id');
 
             $payment = Payment::create([
-                'lote' =>  md5(date('m-Y')),
+                'lote' =>  md5(date('m-Y') . time()),
                 'status' =>  Payment::GENERATE,
                 'period_sufix' => date('m-Y'),
                 'period_start' => Carbon::now(),
@@ -47,6 +47,15 @@ class Generate extends Command
             ]);
 
             $payment->subscriptions()->attach($subscriptions);
+
+            $total_amount = 0;
+
+            foreach ($payment->subscriptions as $subscription) {
+                $total_amount = $total_amount + $subscription->plan->price;
+            }
+
+            $payment->total_amount = $total_amount;
+            $payment->save();
         }
     }
 }
