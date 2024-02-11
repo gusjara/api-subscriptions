@@ -19,6 +19,7 @@ return new class extends Migration
 
             $table->string('lote');
             $table->string('status')->comment('generado | enviado_a_cobrar | pagado');
+            $table->float('total_amount', 12, 2)->nullable();
             $table->string('period_sufix')->comment('sufijo para hacer busquedas ej: mm-yyyy');
             $table->date('period_start');
             $table->date('period_end');
