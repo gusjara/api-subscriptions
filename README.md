@@ -30,6 +30,7 @@ Se tomo como que una subscripcion es de un año, desde el momento que se la crea
 - Servidor web Apache o Nginx
 
 # Endpoints de la API
+Hay un archivo en el root del desarrollo `zenrise.postman_collection.json` que puede ser importado en postman para obtener los endpoints
 > Planes 
 - [get] {url}/api/plans -> obtiene todos los planes hay 3 planes de pruebas en los seeders
 - [get] {url}/api/plans/{id} -> obtiene un plan por su id
